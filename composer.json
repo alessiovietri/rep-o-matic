@@ -1,5 +1,6 @@
 {
     "name": "alextigaer/rep-o-matic",
+    "type": "library",
     "description": "Create Laravel repositories easily!",
     "authors": [
         {
@@ -17,6 +18,5 @@
             ]
         }
     },
-    "minimum-stability": "stable",
     "require": {}
 }
