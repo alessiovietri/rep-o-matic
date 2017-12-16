@@ -42,7 +42,7 @@ php artisan repo:create RepoName
 This will create:
 - 4 exceptions for the repository: 'RepoNameNotFoundException', 'RepoNameNotCreatedException', 'RepoNameNotUpdatedException' and 'RepoNameNotDeletedException'
 - The model file 'RepoName.php' inside the 'Models' directory
-- The 'Repositories' directory with 2 directories inside: 'Contracts' and 'RepoName'. The 'Contracts' directory will contain all the repositories' contracts. The 'RepoName' directory will contain all the repositories for 'RepoName'. The command will also bind the contract with the repository's file
+- The 'Repositories' directory with 2 directories inside: 'Contracts' and 'RepoName'. The 'Contracts' directory will contain all the repositories' contracts. The 'RepoName' directory will contain all the repositories for 'RepoName'. The command will also bind the contract to the repository's file
 - The migration 'create_reponames_table'
 - The 'RepoNamesSeeder'. The command will also update the 'DatabaseSeeder' file, adding the line to call 'RepoNamesSeeder'
 
