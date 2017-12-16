@@ -28,7 +28,7 @@ Create Laravel repositories easily!
 ## **Installation**
 
 ```sh
-composer require alextigaer/rep-o-matic
+composer require alextigaer/rep-o-matic dev-master
 ```
 
 ## **Basic usage**
