@@ -17,6 +17,6 @@
             ]
         }
     },
-    "minimum-stability": "master",
+    "minimum-stability": "beta",
     "require": {}
 }
