@@ -146,8 +146,7 @@ class CreateRepo extends Command
     {
         parent::__construct();
 
-        // TODO: CHANGE IN vendor WHEN WILL BE A PACKAGE
-        $this->baseDir = base_path('packages\\alextigaer\\rep-o-matic\\src\\RepOMatic');
+        $this->baseDir = base_path('vendor\\alextigaer\\rep-o-matic\\src\\RepOMatic');
     }
 
     /**
