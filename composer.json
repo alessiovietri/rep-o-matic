@@ -1,0 +1,19 @@
+{
+    "name": "alextigaer/rep-o-matic",
+    "description": "Create Laravel repositories easily!",
+    "authors": [
+        {
+            "name": "Alessio Vietri",
+            "email": "alvietri@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AlexTigaer\\RepOMatic\\Providers\\RepOMaticServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {}
+}
