@@ -19,5 +19,7 @@
         }
     },
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "alextigaer/rep-o-matic": "^0.1.0"
+    }
 }
