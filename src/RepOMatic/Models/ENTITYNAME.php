@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
-class ENTITYNAME
+use Illuminate\Database\Eloquent\Model;
+
+class ENTITYNAME extends Model
 {
     /**
      * The attributes that are mass assignable.
