@@ -276,6 +276,12 @@ class CreateRepo extends Command
         $repoModelFile = $modelsDir.'\\'.str_replace($this->word, $this->name, $packageModelFileName);
         $this->copy_file($packageModelFile, $repoModelFile);
 
+        // Replace model's table name
+        $modelTableString = "MODELTABLE";
+        $repoModelFileContent = file_get_contents($repoModelFile);
+        $repoModelFileContent = str_replace($modelTableString, strtolower($this->name).'s', $repoModelFileContent);
+        file_put_contents($repoModelFile, $repoModelFileContent);
+
         // Add mass-assignable attributes if prompted by the user
         if(count($this->modelFillable) > 0){
             $modelAttributesString = "\t\t'".implode("',\n\t\t'", $this->modelFillable)."'";
