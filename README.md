@@ -46,6 +46,8 @@ This will create:
 - The migration 'create_reponames_table'
 - The 'RepoNamesSeeder'. The command will also update the 'DatabaseSeeder' file, adding the line to call 'RepoNamesSeeder'
 
+Execute the command "composer dump-autoload" after an execution to include the new classes into the project
+
 ## **Options**
 
 If you want, you can use these options to customize the creation:
