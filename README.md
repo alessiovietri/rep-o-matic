@@ -46,13 +46,6 @@ This will create:
 - The migration 'create_reponames_table'
 - The 'RepoNamesSeeder'. The command will also update the 'DatabaseSeeder' file, adding the line to call 'RepoNamesSeeder'
 
-Execute the command "composer dump-autoload" after an execution to include the new classes into the project
-
-```sh
-// You can run the command as following
-php artisan repo:create RepoName && composer dump-autoload
-```
-
 ## **Options**
 
 If you want, you can use these options to customize the creation:

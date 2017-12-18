@@ -243,15 +243,26 @@ class CreateRepo extends Command
         $repoExceptionsDir = app_path('Exceptions\\'.$this->name);
         if(!file_exists($repoExceptionsDir))
             mkdir($repoExceptionsDir);
-        $packageExceptionsDir = $this->baseDir.'\\Exceptions';
-        $exceptionFiles = scandir($packageExceptionsDir);
-        foreach ($exceptionFiles as $key => $value) {
-            if (!in_array($value,array(".",".."))) {
-                $exceptionFile = $packageExceptionsDir.'\\'.$value;
-                $repoExceptionFile = $repoExceptionsDir.'\\'.str_replace($this->word, $this->name, $value);
-                $this->copy_file($exceptionFile, $repoExceptionFile);
-            }
-        }
+        $notFoundExc = $this->name.'\\'.$this->name.'NotFoundException';
+        $notCreatedExc = $this->name.'\\'.$this->name.'NotCreatedException';
+        $notUpdatedExc = $this->name.'\\'.$this->name.'NotUpdatedException';
+        $notDeletedExc = $this->name.'\\'.$this->name.'NotDeletedException';
+        if(!file_exists(app_path($notFoundExc)))
+            $this->callSilent('make:exception', [
+                'name' => $this->name.'\\'.$this->name.'NotFoundException'
+            ]);
+        if(!file_exists(app_path($notCreatedExc)))
+            $this->callSilent('make:exception', [
+                'name' => $this->name.'\\'.$this->name.'NotCreatedException'
+            ]);
+        if(!file_exists(app_path($notUpdatedExc)))
+            $this->callSilent('make:exception', [
+                'name' => $this->name.'\\'.$this->name.'NotUpdatedException'
+            ]);
+        if(!file_exists(app_path($notDeletedExc)))
+            $this->callSilent('make:exception', [
+                'name' => $this->name.'\\'.$this->name.'NotDeletedException'
+            ]);
 
         // Show a confirmation message
         $this->info('> \''.$this->name.'\' exceptions created!');
@@ -270,22 +281,32 @@ class CreateRepo extends Command
         $modelsDir = app_path('Models');
         if(!file_exists($modelsDir))
             mkdir($modelsDir);
-        $packageModelsDir = $this->baseDir.'\\Models';
-        $packageModelFileName = $this->word.'.php';
-        $packageModelFile = $packageModelsDir.'\\'.$packageModelFileName;
-        $repoModelFile = $modelsDir.'\\'.str_replace($this->word, $this->name, $packageModelFileName);
-        $this->copy_file($packageModelFile, $repoModelFile);
+        $repoModelFile = 'Models\\'.$this->name;
+        if(!file_exists(app_path($repoModelFile)))
+            $this->callSilent('make:model', [
+                'name' => $repoModelFile
+            ]);
+
+        $repoModelFileContent = file(app_path($repoModelFile.'.php'), FILE_IGNORE_NEW_LINES);
+        foreach ($repoModelFileContent as $index => $value) {
+            if(strpos($value, 'extends Model') != false){
+                $repoModelFileContent[$index + 2] = "\t/**\n\t * The table associated with the model.\n\t *\n\t * @var string\n\t*/\n\tprotected \$table = 'MODELTABLE';\n\n\t/**\n\t * The attributes that are mass assignable.\n\t *\n\t * @var array\n\t*/\n\tprotected \$fillable = [\n\t];\n\n\t/**\n\t * The attributes that should be hidden for arrays.\n\t *\n\t * @var array\n\t*/\n\tprotected \$hidden = [\n\t];";
+                break;
+            }
+        }
+        $repoModelFileContent = implode("\n", $repoModelFileContent);
+        file_put_contents(app_path($repoModelFile.'.php'), $repoModelFileContent);
 
         // Replace model's table name
         $modelTableString = "MODELTABLE";
-        $repoModelFileContent = file_get_contents($repoModelFile);
+        $repoModelFileContent = file_get_contents(app_path($repoModelFile.'.php'));
         $repoModelFileContent = str_replace($modelTableString, strtolower($this->name).'s', $repoModelFileContent);
-        file_put_contents($repoModelFile, $repoModelFileContent);
+        file_put_contents(app_path($repoModelFile.'.php'), $repoModelFileContent);
 
         // Add mass-assignable attributes if prompted by the user
         if(count($this->modelFillable) > 0){
             $modelAttributesString = "\t\t'".implode("',\n\t\t'", $this->modelFillable)."'";
-            $repoModelFileContent = file($repoModelFile, FILE_IGNORE_NEW_LINES);
+            $repoModelFileContent = file(app_path($repoModelFile.'.php'), FILE_IGNORE_NEW_LINES);
             foreach ($repoModelFileContent as $index => $value) {
                 if(strpos($value, '$fillable') != false){
                     array_splice($repoModelFileContent, $index + 1, 0, $modelAttributesString);
@@ -293,13 +314,13 @@ class CreateRepo extends Command
                 }
             }
             $repoModelFileContent = implode("\n", $repoModelFileContent);
-            file_put_contents($repoModelFile, $repoModelFileContent);
+            file_put_contents(app_path($repoModelFile.'.php'), $repoModelFileContent);
         }
 
         // Add hidden attributes if prompted by the user
         if(count($this->modelHidden) > 0){
             $modelHiddenAttributesString = "\t\t'".implode("',\n\t\t'", $this->modelHidden)."'";
-            $repoModelFileContent = file($repoModelFile, FILE_IGNORE_NEW_LINES);
+            $repoModelFileContent = file(app_path($repoModelFile.'.php'), FILE_IGNORE_NEW_LINES);
             foreach ($repoModelFileContent as $index => $value) {
                 if(strpos($value, '$hidden') != false){
                     array_splice($repoModelFileContent, $index + 1, 0, $modelHiddenAttributesString);
@@ -307,7 +328,7 @@ class CreateRepo extends Command
                 }
             }
             $repoModelFileContent = implode("\n", $repoModelFileContent);
-            file_put_contents($repoModelFile, $repoModelFileContent);
+            file_put_contents(app_path($repoModelFile.'.php'), $repoModelFileContent);
         }
 
         // Show a confirmation message
@@ -474,10 +495,24 @@ class CreateRepo extends Command
         $packageSeederFileName = $this->word.'sSeeder.php';
         $packageSeederFile = $packageSeedersDir.'\\'.$packageSeederFileName;
 
-        // Edit and copy seeder file
-        $seedersDir = database_path('seeds');
-        $repoSeederFile = $seedersDir.'\\'.str_replace($this->word, $this->name, $packageSeederFileName);
-        $this->copy_file($packageSeederFile, $repoSeederFile);
+        // Create seeder file
+        $repoSeederFile = $this->name.'sSeeder';
+        if(!file_exists(database_path('seeds\\'.$repoSeederFile)))
+            $this->callSilent('make:seeder', [
+                'name' => $repoSeederFile
+            ]);
+
+        $repoSeederFileContent = file(database_path('seeds\\'.$repoSeederFile.'.php'), FILE_IGNORE_NEW_LINES);
+        foreach ($repoSeederFileContent as $index => $value) {
+            if(strpos($value, 'Illuminate') != false)
+                $repoSeederFileContent[$index + 1] = "\nuse App\\Models\\".$this->name." as ".$this->name.";\n";
+            else if(strpos($value, 'run()') != false){
+                $repoSeederFileContent[$index + 2] = "\t\t// Empty the ".$this->name." table before filling it\n\t\t".$this->name."::where('id', '<>', null)->delete();";
+                break;
+            }
+        }
+        $repoSeederFileContent = implode("\n", $repoSeederFileContent);
+        file_put_contents(database_path('seeds\\'.$repoSeederFile.'.php'), $repoSeederFileContent);
 
 
         // Set the right values inside the seeder
@@ -540,7 +575,7 @@ class CreateRepo extends Command
                 $seederElement .= "\n\t\t]);";
                 $seederElements .= $seederElement;
             }
-            $repoSeederFileContent = file($repoSeederFile, FILE_IGNORE_NEW_LINES);
+            $repoSeederFileContent = file(database_path('seeds\\'.$repoSeederFile.'.php'), FILE_IGNORE_NEW_LINES);
             foreach ($repoSeederFileContent as $index => $value) {
                 if(strpos($value, '::where') != false){
                     array_splice($repoSeederFileContent, $index + 1, 0, $seederElements);
@@ -548,7 +583,7 @@ class CreateRepo extends Command
                 }
             }
             $repoSeederFileContent = implode("\n", $repoSeederFileContent);
-            file_put_contents($repoSeederFile, $repoSeederFileContent);
+            file_put_contents(database_path('seeds\\'.$repoSeederFile.'.php'), $repoSeederFileContent);
         }
 
         // Update DatabaseSeeder file
