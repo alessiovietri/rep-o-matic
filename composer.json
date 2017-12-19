@@ -10,7 +10,6 @@
     "keywords": ["laravel","rep-o-matic","repositories"],
     "homepage": "https://github.com/alextigaer/rep-o-matic",
     "license": "MIT",
-    "minimum-stability": "stable",
     "require": {
         "laravel/framework": "5.*"
     },
