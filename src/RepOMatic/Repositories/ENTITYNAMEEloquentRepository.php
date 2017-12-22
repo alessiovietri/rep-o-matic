@@ -18,7 +18,7 @@ class ENTITYNAMEEloquentRepository implements ENTITYNAMERepository
      *
      * @return mixed
      */
-    public function getAll()
+    public static function getAll()
     {
         $allENTITYNAMEs = ENTITYNAME::all();
 
@@ -32,7 +32,7 @@ class ENTITYNAMEEloquentRepository implements ENTITYNAMERepository
      * @return mixed
      * @throws ENTITYNAMENotCreatedException
      */
-    public function create(array $attributes)
+    public static function create(array $attributes)
     {
         $aENTITYNAME = new ENTITYNAME;
 
@@ -54,10 +54,10 @@ class ENTITYNAMEEloquentRepository implements ENTITYNAMERepository
      * @return mixed
      * @throws ENTITYNAMENotUpdatedException
      */
-    public function update($id, array $attributes)
+    public static function update($id, array $attributes)
     {
         try{
-            $aENTITYNAME = $this->find($id);
+            $aENTITYNAME = find($id);
 
             foreach($attributes as $name => $value){
                 $aENTITYNAME->{$name} = $value;
@@ -81,9 +81,9 @@ class ENTITYNAMEEloquentRepository implements ENTITYNAMERepository
      * @throws ENTITYNAMENotDeletedException
      * @throws ENTITYNAMENotFoundException
      */
-    public function delete($id)
+    public static function delete($id)
     {
-        if(!$this->find($id)->delete())
+        if(!find($id)->delete())
             throw new ENTITYNAMENotDeletedException;
         return true;
     }
@@ -95,7 +95,7 @@ class ENTITYNAMEEloquentRepository implements ENTITYNAMERepository
      * @return mixed
      * @throws ENTITYNAMENotFoundException
      */
-    public function find($id)
+    public static function find($id)
     {
         $aENTITYNAME = ENTITYNAME::where('id', '=', $id)
             ->first();

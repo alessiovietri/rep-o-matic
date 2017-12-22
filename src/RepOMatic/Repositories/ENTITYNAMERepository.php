@@ -4,14 +4,14 @@ namespace App\Repositories\Contracts;
 
 interface ENTITYNAMERepository {
 
-    public function getAll();
+    public static function getAll();
 
-    public function create(array $attributes);
+    public static function create(array $attributes);
 
-    public function update($id, array $attributes);
+    public static function update($id, array $attributes);
 
-    public function delete($id);
+    public static function delete($id);
 
-    public function find($Id);
+    public static function find($Id);
 
 }
