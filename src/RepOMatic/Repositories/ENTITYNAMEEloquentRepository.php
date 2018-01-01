@@ -57,7 +57,7 @@ class ENTITYNAMEEloquentRepository implements ENTITYNAMERepository
     public static function update($id, array $attributes)
     {
         try{
-            $aENTITYNAME = find($id);
+            $aENTITYNAME = ENTITYNAMEEloquentRepository::find($id);
 
             foreach($attributes as $name => $value){
                 $aENTITYNAME->{$name} = $value;
@@ -83,7 +83,7 @@ class ENTITYNAMEEloquentRepository implements ENTITYNAMERepository
      */
     public static function delete($id)
     {
-        if(!find($id)->delete())
+        if(!ENTITYNAMEEloquentRepository::find($id)->delete())
             throw new ENTITYNAMENotDeletedException;
         return true;
     }
