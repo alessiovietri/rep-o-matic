@@ -12,6 +12,6 @@ interface ENTITYNAMERepository {
 
     public static function delete($id);
 
-    public static function find($Id);
+    public static function find($id);
 
 }
