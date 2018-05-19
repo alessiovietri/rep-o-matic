@@ -402,8 +402,12 @@ class CreateRepo extends Command
     private function create_migration(){
         $this->line('- Creating \''.$this->name.'\' migration...');
 
+        // Build the correct name for the migration
+        $migrationFileNameWords = preg_split('/(?=[A-Z])/', $this->name);
+        $migrationFileNameWords[count($migrationFileNameWords) - 1] = str_plural($migrationFileNameWords[count($migrationFileNameWords) - 1]);
+        $migrationFileName = 'create_'.strtolower(implode('_', $migrationFileNameWords)).'_table';
+
         // Call the command to create the migration file
-        $migrationFileName = 'create_'.strtolower($this->name).'s_table';
         $this->callSilent('make:migration', [
             'name' => $migrationFileName
         ]);
@@ -493,11 +497,13 @@ class CreateRepo extends Command
         $this->line('- Creating \''.$this->name.'\' seeder...');
 
         $packageSeedersDir = $this->baseDir.'\\Seeders';
-        $packageSeederFileName = $this->word.'sSeeder.php';
+        $migrationFileNameWords = preg_split('/(?=[A-Z])/', $this->name);
+        $migrationFileNameWords[count($migrationFileNameWords) - 1] = str_plural($migrationFileNameWords[count($migrationFileNameWords) - 1]);
+        $packageSeederFileName = implode('', $migrationFileNameWords).'Seeder.php';
         $packageSeederFile = $packageSeedersDir.'\\'.$packageSeederFileName;
 
         // Create seeder file
-        $repoSeederFile = $this->name.'sSeeder';
+        $repoSeederFile = implode('', $migrationFileNameWords).'Seeder';
         if(!file_exists(database_path('seeds\\'.$repoSeederFile)))
             $this->callSilent('make:seeder', [
                 'name' => $repoSeederFile
@@ -588,7 +594,7 @@ class CreateRepo extends Command
         }
 
         // Update DatabaseSeeder file
-        $seederLine = "\t\t".'$this->call('.$this->name.'sSeeder::class);';
+        $seederLine = "\t\t".'$this->call('.implode('', $migrationFileNameWords).'Seeder::class);';
         $databaseSeederFile = database_path('seeds\\DatabaseSeeder.php');
         $databaseSeederFileContent = file($databaseSeederFile, FILE_IGNORE_NEW_LINES);
         $foundRun = false;
