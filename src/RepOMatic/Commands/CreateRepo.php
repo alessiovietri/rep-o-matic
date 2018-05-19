@@ -242,10 +242,12 @@ class CreateRepo extends Command
         $repoExceptionsDir = app_path('Exceptions\\'.$this->name);
         if(!file_exists($repoExceptionsDir))
             mkdir($repoExceptionsDir);
+
         $notFoundExc = $this->name.'\\'.$this->name.'NotFoundException';
         $notCreatedExc = $this->name.'\\'.$this->name.'NotCreatedException';
         $notUpdatedExc = $this->name.'\\'.$this->name.'NotUpdatedException';
         $notDeletedExc = $this->name.'\\'.$this->name.'NotDeletedException';
+
         if(!file_exists(app_path($notFoundExc)))
             $this->callSilent('make:exception', [
                 'name' => $this->name.'\\'.$this->name.'NotFoundException'
