@@ -22,7 +22,7 @@ class CreateRepo extends Command
         {--n-types=*        :   The columns types of the attributes (check Laravel doc for acceptable values)}
         {--migrate=n        :   Choose whether to run the command migrate, or not [y/n]}
         {--s=y              :   Choose whether to create the seeder, or not [y/n]}
-        {--s-instances=*    :   The values of the instances}
+        {--s-instances=*    :   The values of the instances} 
         {--seed=n           :   Choose whether to run the command db:seed, or not [y/n]}';
 
     /**
@@ -145,7 +145,6 @@ class CreateRepo extends Command
     public function __construct()
     {
         parent::__construct();
-
         $this->baseDir = base_path('vendor\\alextigaer\\rep-o-matic\\src\\RepOMatic');
     }
 
@@ -193,10 +192,9 @@ class CreateRepo extends Command
         $this->seed = $this->option('seed');
 
         // Check the name is not empty...
-        if($this->name == ""){
+        if($this->name == "")
             // ...and show a message if it is
             $this->error('ERROR: repo name missing');
-        }
         else{
             // Print repo name
             $this->info('-------------------------------');
@@ -213,7 +211,8 @@ class CreateRepo extends Command
                 $this->create_model();
 
             // Create the app\Repositories dir, the app\Repositories\Contracts dir,
-            // the app\Repositories\RepoName dir, the RepoName contract and the RepoName repository files
+            // the app\Repositories\RepoName dir, the RepoName contract and the
+            // RepoName repository files
             if($this->createRepository == 'y')
                 $this->create_repository();
 
