@@ -405,7 +405,7 @@ class CreateRepo extends Command
         // Build the correct name for the migration
         $migrationFileNameWords = preg_split('/(?=[A-Z])/', $this->name);
         $migrationFileNameWords[count($migrationFileNameWords) - 1] = str_plural($migrationFileNameWords[count($migrationFileNameWords) - 1]);
-        $migrationFileName = 'create_'.strtolower(implode('_', $migrationFileNameWords)).'_table';
+        $migrationFileName = 'create'.strtolower(implode('_', $migrationFileNameWords)).'_table';
 
         // Call the command to create the migration file
         $this->callSilent('make:migration', [
