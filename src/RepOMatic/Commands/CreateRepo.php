@@ -301,7 +301,10 @@ class CreateRepo extends Command
         // Replace model's table name
         $modelTableString = "MODELTABLE";
         $repoModelFileContent = file_get_contents(app_path($repoModelFile.'.php'));
-        $repoModelFileContent = str_replace($modelTableString, strtolower($this->name).'s', $repoModelFileContent);
+        $repoModelFileNameWords = preg_split('/(?=[A-Z])/', $this->name);
+        $repoModelFileNameWords[count($repoModelFileNameWords) - 1] = str_plural($repoModelFileNameWords[count($repoModelFileNameWords) - 1]);
+        $repoModelFileName = substr(strtolower(implode('_', $repoModelFileNameWords)), 1);
+        $repoModelFileContent = str_replace($modelTableString, $repoModelFileName, $repoModelFileContent);
         file_put_contents(app_path($repoModelFile.'.php'), $repoModelFileContent);
 
         // Add mass-assignable attributes if prompted by the user
